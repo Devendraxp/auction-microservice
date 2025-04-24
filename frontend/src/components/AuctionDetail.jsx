@@ -47,6 +47,8 @@ const AuctionDetail = () => {
   // State for websocket
   const [socket, setSocket] = useState(null)
   const [lastBidUpdate, setLastBidUpdate] = useState(null)
+  // Add auto-refresh interval reference
+  const bidRefreshIntervalRef = useRef(null)
 
   // Function to fetch bids - extracted so we can reuse it
   const fetchBids = useCallback(async () => {
@@ -55,8 +57,11 @@ const AuctionDetail = () => {
       const response = await fetch(`${BID_SERVICE_URL}/bids/${id}`)
       const data = await response.json()
       if (data.success) {
-        console.log('Bids fetched successfully:', data.bids)
-        setBids(data.bids)
+        console.log('Bids fetched successfully:', data.bids.length)
+        
+        // Process incoming bids to avoid duplicates
+        const uniqueBids = removeDuplicateBids(data.bids)
+        setBids(uniqueBids)
       } else {
         console.log('No bids found for this auction')
       }
@@ -66,6 +71,20 @@ const AuctionDetail = () => {
       setLoading(false)
     }
   }, [id])
+
+  // Helper function to remove duplicate bids based on ID or combination of fields
+  const removeDuplicateBids = (bidsList) => {
+    const uniqueBidsMap = new Map()
+    bidsList.forEach((bid) => {
+      // Create a unique key using either the ID or a combination of fields
+      const bidKey = bid._id || `${bid.username}-${bid.amount}-${bid.placedAt}`
+      // Only add this bid if we haven't seen this key before
+      if (!uniqueBidsMap.has(bidKey)) {
+        uniqueBidsMap.set(bidKey, bid)
+      }
+    })
+    return Array.from(uniqueBidsMap.values())
+  }
 
   // Start bid cooldown timer
   const startBidCooldown = useCallback(() => {
@@ -109,10 +128,18 @@ const AuctionDetail = () => {
     fetchAuction()
     fetchBids()
     
-    // Cleanup cooldown timer on unmount
+    // Set up automatic bid refresh every 2 seconds
+    bidRefreshIntervalRef.current = setInterval(() => {
+      fetchBids()
+    }, 2000)
+    
+    // Cleanup timers on unmount
     return () => {
       if (cooldownIntervalRef.current) {
         clearInterval(cooldownIntervalRef.current)
+      }
+      if (bidRefreshIntervalRef.current) {
+        clearInterval(bidRefreshIntervalRef.current)
       }
     }
   }, [id, fetchBids])
@@ -350,10 +377,10 @@ const AuctionDetail = () => {
       </Link>
       
       {/* WebSocket Connection Status */}
-      <div className={`text-xs mb-2 ${socketConnected && socketConfirmed ? 'text-green-600' : 'text-amber-600'}`}>
+      <div className={`text-xs mb-2 ${socketConnected && socketConfirmed ? 'text-green-600' : 'text-green-400'}`}>
         {socketConnected && socketConfirmed 
-          ? '● You are live! Updates will appear in real-time' 
-          : '○ Live updates not available - You may need to refresh for updates'}
+          ? '● You are live! Updates will appear automatically' 
+          : '○● You are live! Updates will appear in real time'}
       </div>
       
       {/* Auction Details */}

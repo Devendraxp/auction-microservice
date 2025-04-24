@@ -16,7 +16,7 @@ const HomePage = () => {
       </div>
       
       {/* Feature Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <Card className="flex flex-col items-center text-center p-8 bg-blue-50 border-blue-100">
           <div className="text-3xl text-blue-600 mb-4">🔍</div>
           <h2 className="text-2xl font-semibold mb-3">Browse Auctions</h2>
@@ -42,12 +42,25 @@ const HomePage = () => {
             </Button>
           </Link>
         </Card>
+
+        <Card className="flex flex-col items-center text-center p-8 bg-purple-50 border-purple-100">
+          <div className="text-3xl text-purple-600 mb-4">🤖</div>
+          <h2 className="text-2xl font-semibold mb-3">GCAA Simulation</h2>
+          <p className="text-gray-600 mb-6">
+            Run virtual multi-agent task allocation simulations using the Greedy Coalition Auction Algorithm.
+          </p>
+          <Link to="/simulation" className="mt-auto">
+            <Button variant="primary" size="lg" className="w-full bg-purple-600 hover:bg-purple-700 focus:ring-purple-500">
+              Start Simulation
+            </Button>
+          </Link>
+        </Card>
       </div>
       
       {/* How It Works Section */}
       <div className="mb-12">
         <h2 className="text-2xl font-bold mb-6 text-center">How It Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
             <div className="bg-blue-100 rounded-full h-12 w-12 flex items-center justify-center mx-auto mb-4">
               <span className="font-bold text-blue-600">1</span>
@@ -71,6 +84,14 @@ const HomePage = () => {
             <h3 className="font-semibold mb-2">Win & Complete</h3>
             <p className="text-gray-600">If you're the highest bidder when an auction ends, you win the item!</p>
           </div>
+
+          <div className="text-center">
+            <div className="bg-purple-100 rounded-full h-12 w-12 flex items-center justify-center mx-auto mb-4">
+              <span className="font-bold text-purple-600">4</span>
+            </div>
+            <h3 className="font-semibold mb-2">Try Simulation</h3>
+            <p className="text-gray-600">Experiment with our GCAA simulation to learn about multi-agent task allocation.</p>
+          </div>
         </div>
       </div>
       
@@ -87,6 +108,11 @@ const HomePage = () => {
           <Link to="/create-auction">
             <Button variant="outline" size="lg" className="border-white text-white hover:bg-blue-700">
               Create Auction
+            </Button>
+          </Link>
+          <Link to="/simulation">
+            <Button variant="outline" size="lg" className="border-white text-white hover:bg-purple-700">
+              Try GCAA Simulation
             </Button>
           </Link>
         </div>

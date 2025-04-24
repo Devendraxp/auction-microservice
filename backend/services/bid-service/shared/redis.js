@@ -44,6 +44,31 @@ export const getHighestBid = async (auctionId) => {
   }
 };
 
+// Check if a bid with same username and amount already exists
+export const checkBidExistsInCache = async (auctionId, username, amount) => {
+  try {
+    const key = `auction:${auctionId}:bids`;
+    const bids = await client.zRange(key, 0, -1, { REV: true });
+    
+    if (!bids || bids.length === 0) {
+      return false;
+    }
+    
+    // Parse JSON strings and check for matching bid
+    for (const bidJson of bids) {
+      const bid = JSON.parse(bidJson);
+      if (bid.username === username && bid.amount === amount) {
+        return true;
+      }
+    }
+    
+    return false;
+  } catch (error) {
+    console.error(`Error checking if bid exists in cache for auction ${auctionId}:`, error);
+    return false;
+  }
+};
+
 // Cache a new highest bid
 export const setHighestBid = async (auctionId, bid) => {
   try {

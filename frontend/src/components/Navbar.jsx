@@ -48,6 +48,14 @@ const Navbar = () => {
               </li>
               <li>
                 <Link 
+                  to="/simulation" 
+                  className={`${isActive('/simulation') ? 'text-white font-medium' : 'text-blue-100'} hover:text-white transition-colors`}
+                >
+                  Simulation
+                </Link>
+              </li>
+              <li>
+                <Link 
                   to="/about" 
                   className={`${isActive('/about') ? 'text-white font-medium' : 'text-blue-100'} hover:text-white transition-colors`}
                 >

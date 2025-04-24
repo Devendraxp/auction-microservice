@@ -7,6 +7,8 @@ import HomePage from './components/HomePage'
 import AuctionDetail from './components/AuctionDetail'
 import AuctionList from './components/AuctionList'
 import CreateAuction from './components/CreateAuction'
+import Simulation from './components/Simulation'
+import { SimulationProvider } from './contexts/SimulationContext'
 
 function App() {
   return (
@@ -21,6 +23,11 @@ function App() {
               <Route path="/auctions/:id" element={<AuctionDetail />} />
               <Route path="/create-auction" element={<CreateAuction />} />
               <Route path="/about" element={<div>About Page (Coming Soon)</div>} />
+              <Route path="/simulation" element={
+                <SimulationProvider>
+                  <Simulation />
+                </SimulationProvider>
+              } />
             </Routes>
           </Container>
         </main>

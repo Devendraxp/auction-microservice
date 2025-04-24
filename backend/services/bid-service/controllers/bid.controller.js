@@ -4,7 +4,8 @@ import {
   getHighestBid, 
   setHighestBid,
   addBidToCache,
-  getBidsFromCache
+  getBidsFromCache,
+  checkBidExistsInCache
 } from "../shared/redis.js";
 import { trackAuctionAccess } from "../shared/cacheFlusher.js";
 
@@ -67,6 +68,16 @@ const createBid = async (req, res) => {
       return res.status(409).json({
         success: false,
         error: 'A similar bid was already placed. Please wait a moment and try again if needed.'
+      });
+    }
+    
+    // Check if this bid already exists in the Redis cache (more thorough check)
+    const bidExists = await checkBidExistsInCache(auctionId, username, amount);
+    if (bidExists) {
+      console.log(`Rejected duplicate bid found in cache: ${username} bid $${amount} on auction ${auctionId}`);
+      return res.status(409).json({
+        success: false,
+        error: 'You have already placed this exact bid amount. Please try a different amount.'
       });
     }
 
