@@ -80,6 +80,12 @@ services :
 
   frontend:
     image: devendradhuvan/daa-frontend:latest
+    build:
+      context: ./frontend
+      args:
+        - VITE_AUCTION_SERVICE_URL=/auctions
+        - VITE_BID_SERVICE_URL=/bids
+        - VITE_WEBSOCKET_SERVICE_URL=/
     ports:
       - "80:80"
     depends_on:
