@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 3002;
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/daa';
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: '*',  // Allow requests from any origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
 app.use(express.json());
 
 // Routes

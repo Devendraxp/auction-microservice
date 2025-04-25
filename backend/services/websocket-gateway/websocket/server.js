@@ -21,8 +21,9 @@ class WebSocketServer {
     this.io = new Server(httpServer, {
       cors: {
         origin: '*',  // Allow connections from any origin
-        methods: ['GET', 'POST'],
-        credentials: true
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        credentials: true,
+        allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
       },
       pingTimeout: 60000,     // Increased timeout for better connection stability
       pingInterval: 25000,    // More frequent pings to keep connections alive
